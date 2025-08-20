@@ -9,25 +9,46 @@ import Image from "next/image"
 export function Hero() {
   const [text, setText] = useState("")
   const [isTyping, setIsTyping] = useState(true)
-  const fullText = "Cybersecurity Specialist"
+  const [isDeleting, setIsDeleting] = useState(false)
+  const [roleIndex, setRoleIndex] = useState(0)
+  const roles = [
+    "Cybersecurity Specialist",
+    "Application Security Analyst",
+    "API Reverse Engineer",
+    "Bug Bounty Hunter",
+    "Python Developer"
+  ]
 
   useEffect(() => {
-    if (isTyping) {
-      if (text.length < fullText.length) {
+    if (isTyping && !isDeleting) {
+      if (text.length < roles[roleIndex].length) {
         const timeout = setTimeout(() => {
-          setText(fullText.slice(0, text.length + 1))
+          setText(roles[roleIndex].slice(0, text.length + 1))
         }, 100)
         return () => clearTimeout(timeout)
       } else {
-        setIsTyping(false)
+        // Finished typing, pause then start deleting
         const timeout = setTimeout(() => {
-          setIsTyping(true)
-          setText("")
+          setIsTyping(false)
+          setIsDeleting(true)
         }, 2000)
         return () => clearTimeout(timeout)
       }
+    } else if (isDeleting && !isTyping) {
+      if (text.length > 0) {
+        const timeout = setTimeout(() => {
+          setText(text.slice(0, -1))
+        }, 50) // Faster deletion
+        return () => clearTimeout(timeout)
+      } else {
+        // Finished deleting, move to next role
+        setIsDeleting(false)
+        setRoleIndex((prev) => (prev + 1) % roles.length)
+        // Brief pause before starting to type next role
+        setTimeout(() => setIsTyping(true), 500)
+      }
     }
-  }, [text, isTyping])
+  }, [text, isTyping, isDeleting, roleIndex, roles])
 
   const handleResumeDownload = () => {
     window.open('/Siddharth Bharadwaj - Resume.pdf', '_blank')
