@@ -32,9 +32,7 @@ export function Header() {
   ]
 
   const handleResumeDownload = () => {
-    // In a real implementation, this would point to your actual resume file
-    alert("Resume download would start here. Replace with your actual resume file path.")
-    // window.open('/your-resume.pdf', '_blank');
+    window.open('/Siddharth Bharadwaj - Resume.pdf', '_blank')
   }
 
   return (
